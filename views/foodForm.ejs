@@ -1,0 +1,29 @@
+<%- include('header') -%>
+<div class="centered">
+  <h1>Étel
+    <% if (typeof food ==='undefined') { %>
+      létrehozás
+      <% }else{ %>
+        módosítás
+        <% } %>
+  </h1>
+  <form method="post">
+    <div class="form-group">
+      <label for="name" class="form-label">Név: </label><br>
+      <input type="text" id="name" name="name"
+              value="<%= (typeof food === 'undefined') ? '' : food.name %>"><br>
+    </div>
+    <div class="form-group">
+      <label for="description" class="form-label">Leírás: </label><br>
+      <textarea id="description" name="description" rows="5" cols="50"
+              value="<%= (typeof food === 'undefined') ? '' : food.description %>"></textarea><br>
+    </div>
+    <div class="form-group">
+      <label for="price" class="form-label">Ár: </label><br>
+      <input type="text" id="price" name="price"
+              value="<%= (typeof food === 'undefined') ? '' : food.price %>"> Ft<br>
+    </div>
+    <input type="submit" class="btn btn-danger fab" value="Mentés">
+  </form>
+</div>
+<%- include('footer') -%>

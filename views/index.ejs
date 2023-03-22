@@ -1,0 +1,30 @@
+<%- include('header') -%>
+<div id="chatbox">
+    <div id="chat-messages"></div>
+    <input type="text" id="chat-input" placeholder="Type your message...">
+    <button class="send-button">Send</button>
+</div>
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <table class="table">
+                <tr><a href="/food">
+                      <button type="button" class="btn btn-danger">Ételek</button>
+                </a></tr>
+                <tr><h1>Menü</h1></tr>
+                <% foods.forEach(function(food) { %>
+                    <tr>
+                        <td><img src="hamburger.jpg" alt="Food Image"></td>
+                        <td>
+                          <h3><%= food.name %></h3>
+                          <p><%= food.description %></p>
+                        </td>
+                        <td><%= food.price %> Ft</td>
+                        <td><a href=""><button type="button" class="btn btn-danger">Rendelés</button></a></td>
+                      </tr>
+                <% }); %>
+            </table>
+        </div>
+    </div>
+</div>
+<%- include('footer') -%>
