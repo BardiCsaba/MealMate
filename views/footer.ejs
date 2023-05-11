@@ -1,4 +1,52 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    document.getElementById('send-message').onclick = function() {
+        var message = document.getElementById('message').value;
+        console.log(message)
+        
+        // Emit the chat message using socket.io
+        socket.emit('chat message', message);
+
+        // Create a new list item for the sent message and add it to the chat window
+        var li = document.createElement("li");
+        li.textContent = 'Te: ' + message;
+        document.getElementById('chat-messages').appendChild(li);
+
+        document.getElementById('message').value = '';
+        return false;
+    };
+    
+    socket.on('chat message', function(msg){
+        // Create a new list item for the received message and add it to the chat window
+        var li = document.createElement("li");
+        li.textContent = 'ChatBot: ' + msg;
+        document.getElementById('chat-messages').appendChild(li);
+    });
+</script>
+<script>
+    function addToCart(foodId) {
+        console.log("addToCart(): " + foodId);
+        fetch('/cart/add', {
+            method: 'POST',
+            body: JSON.stringify({ foodId }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.success) {
+                // You can show a success message or update the cart count in the UI
+                alert('Item added to cart');
+            } else {
+                alert('Error adding item to cart');
+            }
+        });
+    }
+</script>
 </body>
 </html>

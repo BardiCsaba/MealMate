@@ -1,17 +1,16 @@
 <%- include('header') -%>
-<div id="chatbox">
-    <div id="chat-messages"></div>
-    <input type="text" id="chat-input" placeholder="Type your message...">
-    <button class="send-button">Send</button>
+<div style="display: block;">
+    <a href="/food">
+        <button type="button" class="btn btn-danger">Ételek</button>
+    </a>
+</div>
+<div style="display: block;">
+    <h1>Menü</h1>
 </div>
 <div class="content">
     <div class="row">
         <div class="col-12">
             <table class="table">
-                <tr><a href="/food">
-                      <button type="button" class="btn btn-danger">Ételek</button>
-                </a></tr>
-                <tr><h1>Menü</h1></tr>
                 <% foods.forEach(function(food) { %>
                     <tr>
                         <td><img src="hamburger.jpg" alt="Food Image"></td>
@@ -20,11 +19,21 @@
                           <p><%= food.description %></p>
                         </td>
                         <td><%= food.price %> Ft</td>
-                        <td><a href=""><button type="button" class="btn btn-danger">Rendelés</button></a></td>
+                        <td><button type="button" class="btn btn-danger" onclick="addToCart('<%= food._id %>')">Rendelés</button></td>
                       </tr>
                 <% }); %>
             </table>
         </div>
+    </div>
+</div>
+<div id="chat-section">
+    <div id="chat-window">
+        <ul id="chat-messages">
+        </ul>
+    </div>
+    <div id="chat-input">
+        <input type="text" id="message" placeholder="Írd le a kérdésedet...">
+        <button id="send-message" class="btn btn-danger">Küldés</button>
     </div>
 </div>
 <%- include('footer') -%>

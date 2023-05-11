@@ -1,9 +1,7 @@
-module.exports = function(objectrepository, viewName) {
+module.exports = function(objRepo) {
     return function(req, res, next) {
-        const message = req.body.message;
-        console.log(`Received message: ${message}`);
-        // TODO: process the message and return a response
-        const response = `You said: "${message}"`;
-        res.send(response);
+        console.log('Received chat message: ' + req.body.message);
+
+        objRepo.io.emit('chat message', 'Sir? ' + req.body.message);
     };
 };
