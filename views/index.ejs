@@ -1,39 +1,45 @@
 <%- include('header') -%>
-<div style="display: block;">
-    <a href="/food">
-        <button type="button" class="btn btn-danger">Ételek</button>
-    </a>
-</div>
-<div style="display: block;">
-    <h1>Menü</h1>
-</div>
 <div class="content">
-    <div class="row">
-        <div class="col-12">
-            <table class="table">
-                <% foods.forEach(function(food) { %>
-                    <tr>
-                        <td><img src="hamburger.jpg" alt="Food Image"></td>
-                        <td>
-                          <h3><%= food.name %></h3>
-                          <p><%= food.description %></p>
-                        </td>
-                        <td><%= food.price %> Ft</td>
-                        <td><button type="button" class="btn btn-danger" onclick="addToCart('<%= food._id %>')">Rendelés</button></td>
-                      </tr>
-                <% }); %>
-            </table>
+    <div class="row mb-3">
+        <div class="col-6 col-md-3">
+            <a href="/food" class="btn btn-lg btn-block btn-danger">Ételek</a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a href="/orders" class="btn btn-lg btn-block btn-warning">Rendelések</a>
         </div>
     </div>
+<div class="text-center card-title card content mb-3">
+    <h1>Menü</h1>
 </div>
-<div id="chat-section">
-    <div id="chat-window">
-        <ul id="chat-messages">
+<div class="gap"></div>
+<div class="row">
+    <% foods.forEach(function(food) { %>
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 d-flex justify-content-center">
+            <div class="card">
+                <div class="card-img-container">
+                    <img src="/resources/hamburger.jpg" class="card-img" alt="Food Image">
+                </div>
+                <div class="card-body">
+                    <div class="gap"></div> <!-- Add a gap between image and title -->
+                    <h3 class="card-title h3"><%= food.name %></h3>
+                    <p class="card-text fs-4"><%= food.description %></p>
+                    <p class="card-text fs-4"><%= food.price %> Ft</p>
+                    <a href="/order/<%= food._id %>" class="btn btn-danger btn-lg">Rendelés</a>
+                </div>
+            </div>
+        </div>
+    <% }); %>
+</div>
+</div>
+<div id="chat-section" class="mt-5">
+    <div id="chat-window" class="mb-3">
+        <ul id="chat-messages" class="list-group">
         </ul>
     </div>
-    <div id="chat-input">
-        <input type="text" id="message" placeholder="Írd le a kérdésedet...">
-        <button id="send-message" class="btn btn-danger">Küldés</button>
+    <div id="chat-input" class="d-flex">
+        <input type="text" id="message" class="form-control" placeholder="Írd le a kérdésedet...">
+        <button id="send-message" class="btn btn-danger ms-2">Küldés</button>
     </div>
 </div>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <%- include('footer') -%>

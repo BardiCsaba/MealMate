@@ -1,28 +1,40 @@
 <%- include('header') -%>
-<div class="centered">
-  <h1>Étel
-    <% if (typeof food ==='undefined') { %>
-      létrehozás
-      <% }else{ %>
-        módosítás
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-8 col-md-6">
+      <h1 class="text-center my-3">Étel
+        <% if (typeof food ==='undefined') { %>
+          létrehozás
+        <% } else { %>
+          módosítás
         <% } %>
-  </h1>
-  <form method="post">
-    <div class="form-group">
-      <label for="name" class="form-label">Név: </label><br>
-      <input type="text" id="name" name="name"
-              value="<%= (typeof food === 'undefined') ? '' : food.name %>"><br>
+      </h1>
+      <form method="post">
+        <div class="form-group">
+          <label for="name" class="form-label h4">Név: </label>
+          <input type="text" id="name" name="name" class="form-control form-control-lg"
+                  value="<%= (typeof food === 'undefined') ? '' : food.name %>">
+        </div>
+        <div class="form-group mt-3">
+          <label for="description" class="form-label h4">Leírás: </label>
+          <textarea id="description" name="description" rows="5" class="form-control form-control-lg"><%= (typeof food === 'undefined') ? '' : food.description %></textarea>
+        </div>
+        <div class="form-group mt-3">
+          <label for="price" class="form-label h4">Ár: </label>
+          <div class="input-group">
+            <input type="text" id="price" name="price" class="form-control form-control-lg"
+                    value="<%= (typeof food === 'undefined') ? '' : food.price %>">
+            <div class="input-group-append">
+              <span class="input-group-text h4">Ft</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <input type="submit" class="btn btn-danger fab btn-lg btn-block" value="Mentés">
+        </div>
+      </form>
     </div>
-    <div class="form-group">
-      <label for="description" class="form-label">Leírás: </label><br>
-      <textarea id="description" name="description" rows="5" cols="50"><%= (typeof food === 'undefined') ? '' : food.description %></textarea><br>
-    </div>
-    <div class="form-group">
-      <label for="price" class="form-label">Ár: </label><br>
-      <input type="text" id="price" name="price"
-              value="<%= (typeof food === 'undefined') ? '' : food.price %>"> Ft<br>
-    </div>
-    <input type="submit" class="btn btn-danger fab" value="Mentés">
-  </form>
+  </div>
 </div>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <%- include('footer') -%>

@@ -35,52 +35,63 @@ app.use(session({
 app.use(express.json());
 require('dotenv').config();
 
-
+app.locals.orders = [];
 //GPT
 let chatGptApi;
-import('chatgpt').then((chatgpt) => {
-  chatGptApi = new chatgpt.ChatGPTUnofficialProxyAPI({
-    accessToken: process.env.OPENAI_ACCESS_TOKEN,
-    apiReverseProxyUrl: 'https://ai.fakeopen.com/api/conversation'
-  });
-});
+let gptResponse;
+let context;
+let FoodModel = require('./models/food');
+let initResponse;
 
-async function chatgpt(message, res) {
-    if (res == undefined) {
-        res = await chatGptApi.sendMessage(message);  
-    } else {
-        res = await chatGptApi.sendMessage(message, {
-            parentMessageId: res.id,
-            conversationId: res.id,
-        });  
-    }
+async function main() {
+    const chatgpt = await import('chatgpt');
+    chatGptApi = new chatgpt.ChatGPTUnofficialProxyAPI({
+        accessToken: process.env.OPENAI_ACCESS_TOKEN,
+        apiReverseProxyUrl: 'https://ai.fakeopen.com/api/conversation'
+    });
 
-    console.log('GPT-API:' + res.text);
-    return res;
+    FoodModel.find({}, async (err, foods) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        const foodsStringArray = foods.map(food => `Név: ${food.name}, Leírás: ${food.description}, Ár: ${food.price} Ft`);
+        
+        context = "Te egy éttermi alkalmazásnak egy virtuális pincére vagy." + 
+                      "A kérdésekre válaszolj a jelenlegi tudásod és a [menü] függvényében.\n" +
+                      "[menü]\n" + foodsStringArray.join('\n');
+
+        console.log("INIT:" + context);
+        gptResponse = await chatGptApi.sendMessage(context);
+        initResponse = gptResponse.text;
+        console.log("INIT: " + initResponse);
+
+    });
+
+    // Socket.io setup
+    io.on('connection', async (socket) => {
+        console.log('a user connected');
+        io.emit('chat message', gptResponse.text);
+
+        socket.on('chat message', async (msg) => {
+            console.log('message: ' + msg);
+
+            gptResponse = await chatGptApi.sendMessage(msg, {
+                parentMessageId: gptResponse.id,
+                conversationId: gptResponse.conversationId
+            });  
+
+            io.emit('chat message', gptResponse.text);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('user disconnected');
+        });
+
+        socket.on("order", async (msg) => {
+            
+        })
+    });  
 }
 
-// Socket.io setup
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  let gptResponse;
-
-  socket.on('chat message', async (msg) => {
-    console.log('message: ' + msg);
-
-    if (gptResponse == undefined) {
-        gptResponse = await chatGptApi.sendMessage(msg);
-    } else {
-        gptResponse = await chatGptApi.sendMessage(msg, {
-            parentMessageId: gptResponse.id,
-            conversationId: gptResponse.conversationId
-        });  
-    }
-
-    io.emit('chat message', gptResponse.text);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-});  
+main().catch(console.error);

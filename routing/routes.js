@@ -4,8 +4,8 @@ const getFoodListMW = require('../middleware/food/getFoodListMW');
 const saveFoodMW = require('../middleware/food/saveFoodMW');
 
 const addToCartMW = require('../middleware/addToCartMW');
+const removeFromCartMW = require('../middleware/removeFromCartMW');
 const renderMW = require('../middleware/renderMW');
-const chatbotMW = require('../middleware/chatbotMW');
 const FoodModel = require('../models/food');
 
 
@@ -35,20 +35,39 @@ module.exports = function(app, io) {
         delFoodMW(objRepo),
     );  
 
+    app.use(
+        '/order/:foodid', 
+        getFoodMW(objRepo),
+        addToCartMW(objRepo, app)
+    );  
+
+    app.use(
+        '/remove/:foodid', 
+        getFoodMW(objRepo),
+        removeFromCartMW(objRepo, app),
+        renderMW(objRepo, 'orders')
+    );  
+
     app.get(
         '/food', 
         getFoodListMW(objRepo),
         renderMW(objRepo, 'foodList')
     );  
 
+    app.get(
+        '/orders', 
+        getFoodListMW(objRepo),
+        renderMW(objRepo, 'orders')
+    ); 
+    
+    app.get(
+        '/success', 
+        renderMW(objRepo, 'success')
+    ); 
+
     app.use(
         '/',
         getFoodListMW(objRepo),
         renderMW(objRepo, 'index')
     );
-
-    app.post(
-        '/cart/add', 
-        addToCartMW(objRepo)
-    );  
 };
